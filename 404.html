@@ -193,6 +193,8 @@
       text-underline-offset: 3px;
     }
     .prose a:hover { text-decoration: none; }
+    .prose strong { font-weight: 600; }
+    .prose em { font-style: italic; }
     .prose ul, .prose ol {
       padding-left: 1.4em;
     }
@@ -383,9 +385,7 @@
       main.classList.add('out');
       return new Promise(r => setTimeout(r, 130));
     };
-    function fadeIn() {
-        main.classList.remove('out');
-        }
+    const fadeIn  = () => main.classList.remove('out');
 
     /* router */
     
