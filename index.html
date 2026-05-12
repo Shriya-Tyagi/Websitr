@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shriya Tyagi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* tokens */
+    :root {
+      --bg:      #E4f3f7;
+      --ink:     #0e0e0e;
+      --accent:  #3a7d3a;
+      --muted:   #5c7a82;
+      --border:  rgba(14,14,14,.12);
+      --gutter:  clamp(1.5rem, 6vw, 5rem);
+      --bigFont:  'Big Shoulders Display', sans-serif;
+      --codeFont:  'IBM Plex Mono', monospace;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg:     #0c1215;
+        --ink:    #d8ecf1;
+        --accent: #5cb85c;
+        --muted:  #7aa8b2;
+        --border: rgba(216,236,241,.1);
+      }
+    }
+
+    /* reset */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      --bodyFont: 'IBM Plex Sans', sans-serif;
+      font-family: var(--bodyFont);
+      font-size: 1rem;
+      line-height: 1.7;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+    }
+    img, video { max-width: 100%; display: block; }
+    a { color: inherit; }
+
+    /* layout */
+    .wrap {
+      max-width: calc(min(700px, 100%) + var(--gutter) * 2);
+      padding-inline: var(--gutter);
+      margin-inline: auto;
+      width: 100%;
+    }
+
+    /* header */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-block: 1.05rem;
+    }
+    .brand {
+      font-family: var(--bigFont);
+      font-weight: 800;
+      font-size: clamp(1rem, 2.2vw, 1.25rem);
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      color: var(--ink);
+      text-transform: uppercase;
+      transition: color .15s;
+    }
+    .brand:hover { color: var(--accent); }
+
+    nav { display: flex; gap: clamp(.8rem, 2.5vw, 1.75rem); align-items: center; }
+    .nav-link {
+      font-family: var(--codeFont);
+      font-size: .8rem;
+      font-weight: 500;
+      letter-spacing: .06em;
+      text-decoration: none;
+      color: var(--muted);
+      transition: color .15s;
+    }
+    .nav-link:hover,
+    .nav-link[aria-current] { color: var(--accent); }
+
+    /* page-transition */
+    #main {
+      flex: 1;
+      opacity: 1;
+      transition: opacity .13s ease;
+    }
+    #main.out { opacity: 0; }
+
+    /* hero */
+    .hero {
+      padding-block: clamp(3.5rem, 11vw, 8rem);
+    }
+    .hero-name {
+      font-family: var(--bigFont);
+      font-weight: 900;
+      font-size: clamp(5rem, 18vw, 12rem);
+      line-height: .88;
+      letter-spacing: -.025em;
+      text-transform: uppercase;
+    }
+    .hero-name em {  
+      display: block;
+      font-style: normal;
+      color: var(--accent);
+    }
+    .hero-body {
+      margin-top: clamp(1.4rem, 4vw, 2.2rem);
+      max-width: 46ch;
+      font-family: var(--codeFont);
+      font-size: clamp(.78rem, 1.6vw, .9rem);
+      color: var(--muted);
+      line-height: 1.65;
+    }
+    .hero-body a { color: var(--accent); font-weight: 500; text-underline-offset: 3px; }
+
+    /* top bar pages (/intro /projects /writing) */
+    .pg {
+      padding-block: clamp(2.5rem, 8vw, 5.5rem);
+    }
+    .pg-title {
+      font-family: var(--bigFont);
+      font-weight: 900;
+      font-size: clamp(3rem, 10vw, 7rem);
+      line-height: .9;
+      letter-spacing: -.025em;
+      text-transform: uppercase;
+      margin-bottom: clamp(1.5rem, 5vw, 3rem);
+      /* accent rule below title */
+      padding-bottom: .45em;
+      border-bottom: 3px solid var(--accent);
+    }
+
+    /* article pages (/projects/foo) */
+    .article {
+      padding-block: clamp(2rem, 7vw, 5rem);
+    }
+    .back-link {
+      display: inline-block;
+      font-family: var(--codeFont);
+      font-size: .8rem;
+      letter-spacing: .04em;
+      text-decoration: none;
+      color: var(--muted);
+      margin-bottom: 2.2rem;
+      transition: color .15s;
+    }
+    .back-link::before { content: '← '; }
+    .back-link:hover { color: var(--accent); }
+
+    .article-title {
+      font-family: var(--bigFont);
+      font-weight: 900;
+      font-size: clamp(2.2rem, 7vw, 4.5rem);
+      line-height: .95;
+      letter-spacing: -.02em;
+      text-transform: uppercase;
+      margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+    }
+
+    /* prose */
+    .prose > * + * { margin-top: 1.2em; }
+    .prose h1, .prose h2, .prose h3, .prose h4 {
+      font-family: var(--bigFont);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: -.01em;
+      line-height: 1;
+      margin-top: 2em;
+      color: var(--ink);
+    }
+    .prose h1 { font-size: clamp(1.8rem, 5vw, 2.8rem); }
+    .prose h2 { font-size: clamp(1.4rem, 3.5vw, 2rem); }
+    .prose h3 { font-size: 1.15rem; }
+    .prose a {
+      color: var(--accent);
+      font-weight: 500;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+    }
+    .prose a:hover { text-decoration: none; }
+    .prose ul, .prose ol {
+      padding-left: 1.4em;
+    }
+    .prose li + li { margin-top: .35em; }
+    .prose blockquote {
+      border-left: 3px solid var(--accent);
+      padding-left: 1.1em;
+      color: var(--muted);
+      font-style: italic;
+    }
+    .prose code {
+      font-family: var(--codeFont);
+      font-size: .875em;
+      background: color-mix(in srgb, var(--ink) 7%, transparent);
+      padding: .15em .4em;
+      border-radius: 2px;
+    }
+    .prose pre {
+      background: color-mix(in srgb, var(--ink) 7%, transparent);
+      padding: 1.25em;
+      border-radius: 2px;
+      overflow-x: auto;
+      font-family: var(--codeFont);
+      font-size: .875em;
+    }
+    .prose pre code { background: none; padding: 0; }
+    .prose hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin-block: 2em;
+    }
+
+    /* 404 */
+    .nf {
+      padding-block: clamp(3rem, 10vw, 7rem);
+    }
+    .nf-num {
+      font-family: var(--bigFont);
+      font-weight: 900;
+      font-size: clamp(6rem, 22vw, 15rem);
+      line-height: .85;
+      letter-spacing: -.04em;
+      text-transform: uppercase;
+      color: var(--border);
+    }
+    .nf p {
+      margin-top: 1.5rem;
+      font-family: var(--codeFont);
+      color: var(--muted);
+      font-size: .9rem;
+    }
+    .nf a { color: var(--accent); }
+
+    .loading {
+      padding-block: 3rem;
+      font-family: var(--codeFont);
+      color: var(--muted);
+      font-size: .82rem;
+      letter-spacing: .04em;
+    }
+
+    /* footer */
+    .site-footer {
+      border-top: 1px solid var(--border);
+      padding-block: 1.4rem;
+    }
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: .5rem 1rem;
+      font-family: var(--codeFont);
+      font-size: .75rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="/">Shriya Tyagi</a>
+      <nav aria-label="main">
+        <a class="nav-link" href="/intro">intro</a>
+        <a class="nav-link" href="/projects">projects</a>
+        <a class="nav-link" href="/writing">writing</a>
+      </nav>
+    </div>
+  </header>
+
+  <div id="main">
+    <div class="wrap loading">loading…</div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <span>© 2025 Shriya Tyagi</span>
+      <span>honk.</span>
+    </div>
+  </footer>
+
+  <script>
+    // snarkdown The MIT License (MIT) copyright (c) 2017 Jason Miller , github.com/developit/snarkdown
+    const TAGS={'':['<em>','</em>'],_:['<strong>','</strong>'],'*':['<strong>','</strong>'],'~':['<s>','</s>'],'\n':['<br />'],' ':['<br />'],'-':['<hr />']};
+    function outdent(str){return str.replace(RegExp('^'+(str.match(/^(\t| )+/)||'')[0],'gm'),'');}
+    function encodeAttr(str){return (str+'').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+    function parse(md,prevLinks){let tokenizer=/((?:^|\n+)(?:\n---+|\* \*(?: \*)+)\n)|(?:^``` *(\w*)\n([\s\S]*?)\n```$)|((?:(?:^|\n+)(?:\t|  {2,}).+)+\n*)|((?:(?:^|\n)([>*+-]|\d+\.)\s+.*)+)|(?:!\[([^\]]*?)\]\(([^)]+?)\))|(\[)|(\](?:\(([^)]+?)\))?)|(?:(?:^|\n+)([^\s].*)\n(-{3,}|={3,})(?:\n+|$))|(?:(?:^|\n+)(#{1,6})\s*(.+)(?:\n+|$))|(?:`([^`].*?)`)|(  \n\n*|\n{2,}|__|[*_]|\*\*|~~)/gm,context=[],out='',links=prevLinks||{},last=0,chunk,prev,token,inner,t;
+      function tag(token){let desc=TAGS[token[1]||''];let end=context[context.length-1]==token;if(!desc)return token;if(!desc[1])return desc[0];if(end)context.pop();else context.push(token);return desc[end|0];}
+      function flush(){let str='';while(context.length)str+=tag(context[context.length-1]);return str;}
+      md=md.replace(/^\[(.+?)\]:\s*(.+)$/gm,(s,name,url)=>{links[name.toLowerCase()]=url;return '';}).replace(/^\n+|\n+$/g,'');
+      while((token=tokenizer.exec(md))){prev=md.substring(last,token.index);last=tokenizer.lastIndex;chunk=token[0];
+        if(prev.match(/[^\\](\\\\)*\\$/)){}
+        else if(t=(token[3]||token[4])){chunk='<pre class="code '+(token[4]?'poetry':token[2].toLowerCase())+'"><code'+(token[2]?` class="language-${token[2].toLowerCase()}"`:'')+'>'+outdent(encodeAttr(t).replace(/^\n+|\n+$/g,''))+'</code></pre>';}
+        else if(t=token[6]){if(t.match(/\./)){token[5]=token[5].replace(/^\d+/gm,'');}inner=parse(outdent(token[5].replace(/^\s*[>*+.-]/gm,'')));if(t=='>')t='blockquote';else{t=t.match(/\./)?'ol':'ul';inner=inner.replace(/^(.*)([\n]|$)/gm,'<li>$1</li>');}chunk='<'+t+'>'+inner+'</'+t+'>';}
+        else if(token[8]){chunk=`<img src="${encodeAttr(token[8])}" alt="${encodeAttr(token[7])}">`;}
+        else if(token[10]){out=out.replace('<a>',`<a href="${encodeAttr(token[11]||links[prev.toLowerCase()])}">`);chunk=flush()+'</a>';}
+        else if(token[9]){chunk='<a>';}
+        else if(token[12]||token[14]){t='h'+(token[14]?token[14].length:(token[13]>='='?1:2));chunk='<'+t+'>'+parse(token[12]||token[15],links)+'</'+t+'>';}
+        else if(token[16]){chunk='<code>'+encodeAttr(token[16])+'</code>';}
+        else if(token[17]||token[1]){chunk=tag(token[17]||'--');}
+        out+=prev;out+=chunk;}
+      return (out+md.substring(last)+flush()).replace(/^\n+|\n+$/g,'');
+    }
+
+    const main = document.getElementById('main');
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    /* nav active state */
+    function setActive(pathname) {
+      const parts = pathname.split('/').filter(Boolean);
+      const sec = parts[0] || '';
+      navLinks.forEach(a => {
+        const match = a.getAttribute('href').replace('/', '') === sec && sec !== '';
+        a.toggleAttribute('aria-current', match);
+      });
+    }
+
+    function splitTitle(md) {
+      const m = md.match(/^#{1}\s+(.+)$/m);
+      return m
+        ? { title: m[1].trim(), body: md.replace(m[0], '').trimStart() }
+        : { title: null, body: md };
+    }
+
+    /* templates */
+    function tmplHero(md) {
+      return `<div class="wrap hero">
+  <h1 class="hero-name">Shriya<em>Tyagi</em></h1>
+  <div class="hero-body">${parse(md)}</div>
+</div>`;
+    }
+
+    function tmplSection(md) {
+      const { title, body } = splitTitle(md);
+      return `<div class="wrap pg">
+  ${title ? `<h1 class="pg-title">${title}</h1>` : ''}
+  <div class="prose">${parse(body)}</div>
+</div>`;
+    }
+
+    function tmplArticle(md, back) {
+      const { title, body } = splitTitle(md);
+      return `<div class="wrap article">
+  <a class="back-link" href="/${back}">${back}</a>
+  ${title ? `<h1 class="article-title">${title}</h1>` : ''}
+  <div class="prose">${parse(body)}</div>
+</div>`;
+    }
+
+    function tmplNotFound(path) {
+      return `<div class="wrap nf">
+  <div class="nf-num">404</div>
+  <p>Nothing lives at <code>${path}</code>.&ensp;<a href="/">Go home →</a></p>
+</div>`;
+    }
+
+    /* fetch helper */
+    async function fetchMd(url) {
+      try {
+        const r = await fetch(url);
+        return r.ok ? r.text() : null;
+      } catch { return null; }
+    }
+
+    /* fade */
+    const fadeOut = () => {
+      main.classList.add('out');
+      return new Promise(r => setTimeout(r, 130));
+    };
+    function fadeIn() {
+        main.classList.remove('out');
+        }
+
+    /* router */
+    
+    async function navigate(pathname) {
+      await fadeOut();
+      setActive(pathname);
+
+      const segs = pathname.split('/').filter(Boolean);
+      let html;
+
+      if (segs.length === 0) {
+        // main pg
+        const md = await fetchMd('pages/index.md');
+        html = md ? tmplHero(md) : tmplNotFound(pathname);
+        document.title = 'Shriya Tyagi';
+
+      } else if (segs.length === 1) {
+        // /intro  /projects  /writing
+        const md = await fetchMd(`pages/${segs[0]}/index.md`)
+                ?? await fetchMd(`pages/${segs[0]}.md`);
+        if (md) {
+          const { title } = splitTitle(md);
+          document.title = title ? `${title} · Shriya Tyagi` : 'Shriya Tyagi';
+          html = tmplSection(md);
+        } else {
+          html = tmplNotFound(pathname);
+          document.title = '404 · Shriya Tyagi';
+        }
+
+      } else {
+        // /projects/foo  /writing/bar
+        const md = await fetchMd(`pages/${segs.join('/')}.md`);
+        if (md) {
+          const { title } = splitTitle(md);
+          document.title = title ? `${title} · Shriya Tyagi` : 'Shriya Tyagi';
+          html = tmplArticle(md, segs[0]);
+        } else {
+          html = tmplNotFound(pathname);
+          document.title = '404 · Shriya Tyagi';
+        }
+      }
+
+      main.innerHTML = html;
+      fadeIn();
+      window.scrollTo(0, 0);
+    }
+
+    /* click delegation */
+    document.addEventListener('click', e => {
+      const a = e.target.closest('a');
+      if (!a) return;
+      const href = a.getAttribute('href');
+      // ignore external links
+      if (!href || !href.startsWith('/') || href.startsWith('//')) return;
+      e.preventDefault();
+      if (href !== location.pathname) {
+        history.pushState(null, '', href);
+        navigate(href);
+      }
+    });
+
+    /* back/forward */
+    window.addEventListener('popstate', () => navigate(location.pathname));
+
+    /* initial render */
+    navigate(location.pathname);
+  </script>
+
+</body>
+</html>
