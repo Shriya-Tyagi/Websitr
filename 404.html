@@ -192,7 +192,7 @@
   </footer>
 
   <script>
-    //  snarkdown (MIT © Jason Miller) 
+    // ── snarkdown (MIT © Jason Miller) ────────────────────────────────────────
     const TAGS={'':['<em>','</em>'],_:['<strong>','</strong>'],'*':['<strong>','</strong>'],'~':['<s>','</s>'],'\n':['<br />'],' ':['<br />'],'-':['<hr />']};
     function outdent(s){return s.replace(RegExp('^'+(s.match(/^(\t| )+/)||'')[0],'gm'),'');}
     function encodeAttr(s){return (s+'').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
@@ -213,9 +213,9 @@
         out+=prev;out+=ch;}
       return (out+md.substring(last)+flush()).replace(/^\n+|\n+$/g,'');
     }
-    // 
+    // ─────────────────────────────────────────────────────────────────────────
 
-    //  BASE PATH detection 
+    // ── BASE PATH detection ───────────────────────────────────────────────────
     // The site's known top-level routes. Anything BEFORE the first matching
     // segment in the URL is the repository subdirectory prefix.
     //
@@ -249,7 +249,7 @@
     document.querySelectorAll('.nav-link[data-route]').forEach(a => {
       a.href = BASE + a.dataset.route;
     });
-    // 
+    // ─────────────────────────────────────────────────────────────────────────
 
     const mainEl   = document.getElementById('main');
     const navLinks = document.querySelectorAll('.nav-link');
