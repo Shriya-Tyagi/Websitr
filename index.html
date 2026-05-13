@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Shriya Tyagi</title>
+  <title>Shriya Tyagi 🪿</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@200;300;400&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
@@ -171,11 +171,11 @@
   <header class="site-header">
     <div class="wrap header-inner">
       <!-- hrefs rewritten by JS once BASE is known -->
-      <a class="brand" id="brand-link" href="/">Shriya Tyagi</a>
+      <a class="brand" id="brand-link" href="/">Shriya Tyagi </a>
       <nav aria-label="main">
-        <a class="nav-link" data-route="intro"    href="#">intro</a>
+        <a class="nav-link" data-route="intro"    href="#">🪿intro</a>
         <a class="nav-link" data-route="projects" href="#">projects</a>
-        <a class="nav-link" data-route="writing"  href="#">writing</a>
+        <a class="nav-link" data-route="writing"  href="#">writing🪿</a>
       </nav>
     </div>
   </header>
@@ -213,16 +213,10 @@
         out+=prev;out+=ch;}
       return (out+md.substring(last)+flush()).replace(/^\n+|\n+$/g,'');
     }
-    // ─────────────────────────────────────────────────────────────────────────
 
-    // ── BASE PATH detection ───────────────────────────────────────────────────
+    // ── BASE PATH detection
     // The site's known top-level routes. Anything BEFORE the first matching
-    // segment in the URL is the repository subdirectory prefix.
-    //
-    // Examples:
-    //   shriya-tyagi.github.io/              → BASE = "/"
-    //   shriya-tyagi.github.io/Website/      → BASE = "/Website/"
-    //   shriya-tyagi.github.io/Website/writing → BASE = "/Website/"
+    // segment in the URL is the repository subdirectory prefix
     const ROUTES = new Set(['intro', 'projects', 'writing']);
 
     function detectBase() {
@@ -353,7 +347,7 @@
           html = tmplArticle(md, segs[0]);
         } else {
           html = tmplNotFound(pathname);
-          document.title = '404 · Shriya Tyagi';
+          document.title = '🪿 404 · Shriya Tyagi 🪿';
         }
       }
 
