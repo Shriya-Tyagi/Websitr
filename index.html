@@ -173,9 +173,8 @@
       <!-- hrefs rewritten by JS once BASE is known -->
       <a class="brand" id="brand-link" href="/">Shriya Tyagi</a>
       <nav aria-label="main">
-        <a class="nav-link" data-route="intro"    href="#">intro</a>
-        <a class="nav-link" data-route="projects" href="#">projects</a>
-        <a class="nav-link" data-route="writing"  href="#">writing</a>
+        <a class="nav-link" data-route="projects" href="#">🪿 projects</a>
+        <a class="nav-link" data-route="writing"  href="#">writing 🪿</a>
       </nav>
     </div>
   </header>
@@ -213,9 +212,8 @@
         out+=prev;out+=ch;}
       return (out+md.substring(last)+flush()).replace(/^\n+|\n+$/g,'');
     }
-    // ─────────────────────────────────────────────────────────────────────────
 
-    // ── BASE PATH detection ───────────────────────────────────────────────────
+    // ── BASE PATH detection 
     // The site's known top-level routes. Anything BEFORE the first matching
     // segment in the URL is the repository subdirectory prefix.
     //
@@ -223,7 +221,7 @@
     //   shriya-tyagi.github.io/              → BASE = "/"
     //   shriya-tyagi.github.io/Website/      → BASE = "/Website/"
     //   shriya-tyagi.github.io/Website/writing → BASE = "/Website/"
-    const ROUTES = new Set(['intro', 'projects', 'writing']);
+    const ROUTES = new Set(['projects', 'writing']);
 
     function detectBase() {
       const segs = location.pathname.split('/').filter(Boolean);
@@ -328,20 +326,19 @@
       const segs = route.split('/').filter(Boolean);
       let html;
 
-      if (segs.length === 0) {
-            const md = await fetchMd('pages/intro/index.md')
-                    ?? await fetchMd('pages/intro.md');
-            if (md) {
+        if (segs.length === 0) {
+        const md = await fetchMd('pages/intro/index.md')
+                ?? await fetchMd('pages/intro.md');
+        if (md) {
             const { title } = splitTitle(md);
             document.title = title ? `${title} · Shriya Tyagi` : 'Shriya Tyagi';
             html = tmplSection(md);
-            } else {
+        } else {
             html = tmplNotFound(pathname);
-            document.title = 'Shriya Tyagi';
-            }
+            document.title = '404 · Shriya Tyagi';
+        }
 
-
-      else if (segs.length === 1) {
+      } else if (segs.length === 1) {
         const md = await fetchMd(`pages/${segs[0]}/index.md`)
                 ?? await fetchMd(`pages/${segs[0]}.md`);
         if (md) {
