@@ -1,6 +1,4 @@
-Electrical engineering student. UW. 
+Electrical engineering student, UWaterloo.
 
 [I write](/writing). 
 [Sometimes I make things](/projects).
-
-currently ~~procrastinating~~ building things.
