@@ -1,5 +1,5 @@
 # On Defaults
-*A default .md file to verify if my non-default 404 pages work.*
+<br>
 
 There's a version of your life you're living right now where you never chose the font on your screen, the browser you opened this in, or the keyboard layout you've been using for fifteen years. Someone upstream decided, and you inherited it.  
 
@@ -9,7 +9,4 @@ Your text editor uses a tab width of 4 because someone thought 4 was reasonable.
 
 <br>
 
-This page is a default to test if my site works.
-<br>
-
-*The pages of this website are 404 errors that are not default.*
+*This page is a default .md to test if my non-default 404 pages work.*
