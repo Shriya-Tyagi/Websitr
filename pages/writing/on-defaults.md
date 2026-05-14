@@ -7,6 +7,4 @@ Defaults are quiet. Most software ships with defaults that were chosen for the m
 
 Your text editor uses a tab width of 4 because someone thought 4 was reasonable. Your system font is whatever came with the OS. Your terminal emulator probably still uses black-on-white because that was once a safety choice on monitors that couldn't reliably do the reverse. Rates of participation in organ donation programs are known to be powerfully influenced by the relevant default policy in effect (“opt-in” vs. “opt-out”).  
 
-<br>
-
-*This page is a default .md to test if my non-default 404 pages work.*
+This page is a default .md to test if my non-default 404 pages work.
