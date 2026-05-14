@@ -8,19 +8,19 @@ A minimal, secure plagiarism detector using TF-IDF and cosine similarity against
 
 ## The problem
 
-Most plagiarism checkers either phone home with your text, require a paid API, or only catch direct copy-paste. I wanted something that runs entirely on my machine, costs nothing, and is actually hard to fool with light paraphrasing.
+Existing plagiarism detection tools typically transmit input text to third-party servers, require paid API access, or rely on exact string matching that fails against paraphrased content. The goal was a self-contained solution that operates entirely locally, incurs no recurring cost, and remains robust to surface-level rewriting.
 
 ## What it does
 
-- Takes input text and generates sliding-window search queries from it
-- Searches DuckDuckGo for matching sources and scrapes the top results
-- Compares your text against each scraped page using character-level TF-IDF (5–8 grams) and cosine similarity
-- Uses a coverage-based scoring model: measures what fraction of your text's chunks find a strong match in each source, rather than a single whole-document score
+- Accepts input text and generates sliding-window search queries from it
+- Queries DuckDuckGo for candidate sources and scrapes the top results
+- Compares input text against each scraped page using character-level TF-IDF (5–8 grams) and cosine similarity
+- Applies a coverage-based scoring model: measures what fraction of the input's chunks find a strong match within each source, rather than computing a single whole-document score
 - Returns the top 5 matching URLs ranked by similarity
 
 ## What I learned
 
-Character n-gram TF-IDF catches paraphrasing far better than word-level comparison — if someone rewrites sentences but keeps the structure, the character patterns still match. The coverage score also turned out to be more meaningful than a single similarity number: a document can have one heavily-matched paragraph and a low overall score, which the chunk approach surfaces correctly.
+Character n-gram TF-IDF generalises better than word-level comparison for detecting paraphrasing — structural similarity at the character level persists even when vocabulary is substituted. The coverage-based score also proved more informative than a single similarity coefficient: a source with one heavily-matched passage and low overall overlap is surfaced correctly under the chunk approach, whereas a global score would suppress it.
 
 ---
 
