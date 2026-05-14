@@ -22,6 +22,11 @@ Existing plagiarism detection tools typically transmit input text to third-party
 
 Character n-gram TF-IDF generalises better than word-level comparison for detecting paraphrasing — structural similarity at the character level persists even when vocabulary is substituted. The coverage-based score also proved more informative than a single similarity coefficient: a source with one heavily-matched passage and low overall overlap is surfaced correctly under the chunk approach, whereas a global score would suppress it.
 
+## Demo
+
+![Ketchup sample run — terminal output showing ranked source matches](./assets/ketchup-run.png)
+
+![Code and output side by side, with top match highlighted](./assets/code-output.png)
 ---
 
 [← back to projects](/projects)
