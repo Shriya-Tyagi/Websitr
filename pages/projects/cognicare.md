@@ -1,4 +1,6 @@
 COGNICARE — EMBEDDED PATIENT MONITORING ASSISTANT
+
+
 Status: Complete · Stack: Python, Raspberry Pi 4B, GPIO C, Ollama, PyAudio, SoX, pyttsx3 · Course: ECE 198 Project Studio · Source: GitHub
 
 THE PROBLEM
