@@ -18,3 +18,5 @@ The sensors are consumer-grade, not medical. The readings are useful as a proof 
 RECEPTION
 "I'm going to the hospital tomorrow for a hip replacement, it would be cool if this were available."
 — LinkedIn commenter.
+
+*[A video of it working]{https://www.linkedin.com/posts/activity-7398481961528381440-eKRI?utm_source=share&utm_medium=member_desktop&rcm=ACoAAFmepwwBTB86udLhQaLg7u8VT7WuMlXBce0}*.
