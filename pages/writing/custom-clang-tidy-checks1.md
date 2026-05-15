@@ -1,6 +1,6 @@
 # Your Regex Is Not a Parser: A guide to custom clang-tidy checks
 
-*Part 1 of 2. This covers what clang-tidy is, why custom checks exist, what the AST, how to build LLVM, how to fix likely build errors, and how to explore and learn the AST in order to write a clang-tidy check. Part 2 covers writing clang-tidy the custom check itself: matchers, diagnostics, fix-its, llvm-LIT tests, and the full linking guide.*
+*Part 1 of 2. This covers what clang-tidy is, why custom checks exist, what the AST, how to build LLVM, and how to explore and learn the AST in order to write a clang-tidy check. Part 2 covers writing clang-tidy the custom check itself: matchers, diagnostics, fix-its, llvm-LIT tests, and the full linking guide.*
 *If you are here to lint your own code rather than write checks for it, this is not that document. That document is: "So you want to lint your code: The Guide."*
 
 ---
@@ -15,7 +15,7 @@ Clang-tidy checks are C++ extensions integrated into the clang-tidy framework th
 
 The llvm-project comes with several hundred built-in checks organized into modules: `modernize` for updating old unsafe code to newer safe methods, `readability` for style consistency, `bugprone` for common error patterns (prone: while some cross-TU functionality exists, clang-tidy usually goes translation unit by translation unit) etc. These cover a substantial fraction of what any codebase needs. 
 
-The built-in checks handle general C++. They do not know about internal APIs, a company's specific needs (during my first work term, I implemented and ported checks which helped embedded c++ code comply to certain specific industry standards which are too strict for all applications), or the deprecated subsystems in your codebase specifically. These are yours to write.
+The built-in checks handle general C++. They do not know about internal APIs, a company's specific needs (during my first work term, I implemented and ported checks which helped embedded c++ code comply to standards like Cert C++ and AUTOSAR, for instance), or the deprecated subsystems in your codebase specifically. These are yours to write.
 
 
 ---
@@ -26,21 +26,20 @@ The Abstract Syntax Tree is the data structure Clang builds when it parses a C++
 
 ### The major node categories
 
-Clang's AST has three primary node categories that matter for check writing. Everything else is a subcategory or a detail. The following is not exhaustive but covers the most common categories.
+Clang's AST has 3 primary node categories that matter for check writing. Everything else is a subcategory. The following is not exhaustive but covers the most common categories.
 
-**Declarations (`Decl`).** A `Decl` node represents something that introduces a name. Function declarations, variable declarations, class definitions, template declarations, namespace definitions — these are all `Decl` nodes. The hierarchy under `Decl` is extensive. The ones encountered most frequently:
+**Declarations (`Decl`).** A `Decl` node represents something that introduces a name. Function declarations, variable declarations, class definitions, template declarations, namespace definitions etc. The hierarchy under `Decl` is extensive. The ones encountered most frequently:
 
+- `VarDecl` — a variable declaration; carries type, storage class, initializer
 - `FunctionDecl` — a function or method declaration, including its body if defined
 - `CXXMethodDecl` — a method on a class; subclass of `FunctionDecl`
 - `CXXConstructorDecl` / `CXXDestructorDecl` — constructor and destructor; subclasses of `CXXMethodDecl`
-- `VarDecl` — a variable declaration; carries type, storage class, initializer
-- `ParmVarDecl` — a function parameter; subclass of `VarDecl`
 - `CXXRecordDecl` — a class, struct, or union definition
 - `NamespaceDecl` — a namespace definition
 
-Every `Decl` node carries source location information — where in the file it appears — and access to the `DeclContext` it lives in, which is the enclosing scope.
+Every `Decl` node carries source location information — where in the file it appears — and access to the `DeclContext` it lives in (the enclosing scope it is inside).
 
-**Statements (`Stmt`).** A `Stmt` node represents an executable unit: a statement in the control-flow sense. The common ones:
+**Statements (`Stmt`).** A `Stmt` node represents an executable unit. The common ones:
 
 - `CompoundStmt` — a brace-enclosed block `{ ... }`
 - `IfStmt` — an if statement with condition, then-branch, optional else-branch
@@ -56,9 +55,10 @@ Every `Decl` node carries source location information — where in the file it a
 - `BinaryOperator` — a binary expression with an opcode (`+`, `-`, `==`, `&&`)
 - `UnaryOperator` — a unary expression (`!`, `*`, `&`, `++`)
 - `CXXNewExpr` / `CXXDeleteExpr` — `new` and `delete` expressions
-- `CXXConstructExpr` — a constructor call (not always syntactically visible)
+- `CXXConstructExpr` — a constructor call (not always visible syntactically)
 
-The `ImplicitCastExpr` node deserves specific mention because it is invisible in source code and present everywhere and needs to be stripped often when searching for a specific expr. When the compiler inserts an implicit conversion it wraps the original expression in an `ImplicitCastExpr`. Matchers that do not account for this will fail silently with no explanation. 
+The `ImplicitCastExpr` node deserves special mention because it is invisible in syntax code and present everywhere in the AST and needs to be stripped often when searching for a specific expr. When the compiler inserts an implicit conversion it wraps the original expression in an `ImplicitCastExpr`. Matchers that do not account for this will fail silently with no explanation.
+In addition to implicit casts. there are also paranthesis casts that may be the reason a matcher misses cases. The helper `IgnoreParenImpCasts()` fixes this issue.
 
 **Types** They are not nodes in the tree in the same way, they are a parallel structure that Decl/Stmt nodes refer to. Every VarDecl/Expr has a QualType. QualType is the wrapper Clang uses for everything type-related. It pairs a Type pointer with qualifiers — const, volatile. Most type-related matchers match via QualType.
 
@@ -67,7 +67,7 @@ The `ImplicitCastExpr` node deserves specific mention because it is invisible in
 - `RecordType` — a class, struct, or union type linked with CXXRecordDecl
 - `AutoType` — an auto-typed declaration before or after deduction
 
-In practice, check code rarely inspects type nodes directly. The matchers handle most type queries — hasType(), pointsTo(), references(), isInteger(). Direct type inspection becomes relevant when the matcher system cannot express the condition cleanly, at which point check() callback code queries the QualType directly via the AST context.
+Check code rarely inspects type nodes directly. The matchers handle most type queries — hasType(), pointsTo(), references(), isInteger(). Direct type inspection becomes relevant when the matcher system cannot express the condition cleanly, and then check() can queries the QualType directly via the AST context.
 
 [For the complete list of nodes:](https://clang.llvm.org/doxygen/namespaceclang.html)
 
@@ -157,14 +157,14 @@ The LLVM monorepo contains a lot of code that is irrelevant to writing clang-tid
 llvm-project/
 ├── clang/
 │   ├── include/clang/
-│   │   ├── AST/                    //AST node definitions
+│   │   ├── AST/                    //Header files defining every AST node type
 │   │   │   ├── Decl.h              //Decl node types
 │   │   │   ├── Stmt.h              //Stmt node types
 │   │   │   ├── Expr.h              //Expr node types
 │   │   │   ├── Type.h              //Type system
 │   │   │   └── ASTContext.h        //AST context: type creation, global info
 │   │   └── ASTMatchers/
-│   │       └── ASTMatchers.h       //All the matcher combinators
+│   │       └── ASTMatchers.h       //Complete list of available AST matchers. When searching for a matcher pattern, this file can be grepped.
 │   └── lib/
 │       └── ASTMatchers/
 │           └── ASTMatchFinder.cpp  # Matcher engine implementation
@@ -185,7 +185,7 @@ llvm-project/
 │   │       ├── YourSpecificCheck.h
 │   │       └── YourSpecificCheck.cpp
 │   └── test/clang-tidy/
-│       └── checkers/               //Lit tests
+│       └── checkers/               //Lit tests to verify each check
 │           ├── bugprone/
 │           ├── cert/
 │           └── YOUR_MODULE/ 
@@ -193,9 +193,8 @@ llvm-project/
 └── llvm/
     └── include/llvm/
         ├── Support/
-        └── ADT/                    //Data structures (StringRef, SmallVector, etc.)
+        └── ADT/                    //Data structures (StringRef, SmallVector, etc.).
 ```
-
 
 
 ### Configuring the build
@@ -244,16 +243,6 @@ Add -j8 or -j16 depending on cores increases parallelism. More neccessary with m
 
 **`clang` not found.** CMake needs a working C++ compiler to configure the build. If the system compiler is GCC and CMake cannot find it, set `CC` and `CXX` explicitly: `CC=gcc CXX=g++ cmake ...`.
 
-
-### Repo structure: some noteable locations
-
-**`clang/include/clang/AST/`** — the header files defining every AST node type. To find what information is carried by/methods are available on a `CallExpr`.
-
-**`clang/include/clang/ASTMatchers/ASTMatchers.h`** — the complete list of available AST matchers. When searching for a matcher to express a particular pattern, this file can be grepped.
-
-**`clang-tools-extra/clang-tidy/cert/`** — a good example module to see real check examples.
-
-**`clang-tools-extra/test/clang-tidy/checkers`** — lit tests to verify each check.
 
 ---
 
@@ -327,4 +316,4 @@ The matcher iterations can be tested against the actual AST of the actual file b
 
 ---
 
-*Part 2 covers the check itself: the structure of a check file, `registerMatchers()` and `check()` in detail, the full matcher syntax for traversing up and down the AST, emitting diagnostics and fix-it hints, wiring the check into CMake and the module system, writing lit tests, and publishing the check — including the linking.*++++
+* Part 2 covers writing clang-tidy the custom check itself: `registerMatchers()` and `check()` in detail, debugging, diagnostics, fix-its, llvm-LIT tests, and the full linking guide.*++++
